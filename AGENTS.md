@@ -11,14 +11,14 @@ Aktueller Stand: siehe [ROADMAP.md](./ROADMAP.md)
 
 ---
 
-## HARTE REGELN
+## Feste Regeln
 
-> Non-negotiable. Gelten ab dem ersten Commit. Bei Verstößen: sofort korrigieren.
+> Diese Regeln sichern Prozess-Isolation, sauberes PTY-Aufräumen und den Secret-Schutz. Abweichung nur nach Rücksprache.
 
 ### IPC
 
-- NIEMALS `ipcRenderer.sendSync()`, immer async via `ipcMain.handle()` / `ipcRenderer.invoke()`
-- NIEMALS `@electron/remote` verwenden
+- Kein `ipcRenderer.sendSync()` (blockiert den Renderer); IPC immer async über `ipcMain.handle()` / `ipcRenderer.invoke()`
+- Kein `@electron/remote` (hebelt die Prozess-Isolation aus)
 - PTY-Output wird über 16ms-Batching gesendet, nie einzelne Chunks direkt per IPC
 - Channel-Namen folgen dem `domain:action` Schema, definiert in `shared/ipc-channels.ts`
 
@@ -45,7 +45,7 @@ Aktueller Stand: siehe [ROADMAP.md](./ROADMAP.md)
 
 ### Security
 
-- Terminal-Output ist IMMER untrusted: nie `eval()`, nie als Code interpretieren
+- Terminal-Output ist untrusted: nie `eval()`, nie als Code interpretieren
 - Secret-Filter läuft im Main Process BEVOR Output an AI-Analyse geht
 - Kein `shell: true` in `child_process` außerhalb von node-pty
 - Strikte System-Prompt-Trennung: Assistent-Kontext und Terminal-Output werden nie vermischt
@@ -62,7 +62,7 @@ Aktueller Stand: siehe [ROADMAP.md](./ROADMAP.md)
 
 ### Workflow: Loop schließen
 
-- Nach jeder Implementierung IMMER selbstständig testen: `pnpm typecheck`, `pnpm lint`, `pnpm test`
+- Nach jeder Implementierung `pnpm typecheck`, `pnpm lint` und `pnpm test` laufen lassen.
 - Projektausnahme zur globalen Testregel: Bei IPC-Handlern, PTY-Lifecycle und Secret-Filter sind Tests Pflicht, auch wenn die Aufgabe sie nicht ausdrücklich verlangt
 
 ---
@@ -127,7 +127,7 @@ src/
 - Komponenten: `PascalCase.tsx` (z.B. `TerminalTabs.tsx`)
 - Stores: `camelCaseStore.ts` (z.B. `terminalStore.ts`)
 - Services/Utils: `camelCase.ts` (z.B. `secretFilter.ts`)
-- Types: `PascalCase.ts` in `shared/types/` (z.B. `TerminalEvent.ts`)
+- Types: eine Datei je Domäne in `shared/types/`, klein geschrieben (z.B. `terminal.ts`, `event.ts`)
 
 ### Namensgebung
 
