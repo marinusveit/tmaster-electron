@@ -1,3 +1,5 @@
+> **Archiviert am 03.10.2026.** Dieser Electron-Terminal-Ansatz wird nicht weitergeführt. Nachfolger: `../tmaster` (Posteingang für Claude-Code-Sessions als TUI). Begründung in `../tmaster/AGENTS.md`.
+
 # tmaster
 
 > AI-gesteuerter Terminal-Orchestrator für Entwickler die mit mehreren Coding-Agents arbeiten.
